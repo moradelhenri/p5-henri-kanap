@@ -1,0 +1,13 @@
+{
+	"folders": [
+		{
+			"path": "..\\..\\P5-Dev-Web-Kanap\\back"
+		},
+		{
+			"path": "..\\..\\P5-Dev-Web-Kanap\\front"
+		}
+	],
+	"settings": {
+		"liveServer.settings.multiRootWorkspaceName": "front"
+	}
+}
