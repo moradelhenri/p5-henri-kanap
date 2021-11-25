@@ -36,7 +36,7 @@ const produitDisplay = async () => {
   <div class="item__content__settings">
   <div class="item__content__settings__color">
         <label for="color-select">Choisir une couleur :</label>
-        <select name="color-select" id="colors">
+        <select name="color-select" id="colors"></select>
         <option value="">--SVP, choisissez une couleur --</option>
         <!--                       <option value="vert">vert</option>
                               <option value="blanc">blanc</option> -->
@@ -54,6 +54,75 @@ const produitDisplay = async () => {
         </article>
                    
       </section>    
-                       `;
+                       `
+
+                     
+
+ // ajout des options couleurs
+
+ let selectColor = document.querySelector("#colors");
+ for (let i = 0; i < produitData.colors.length; i++) {
+   let option = document.createElement("option");
+   option.innerText = produitData.colors[i];
+   selectColor.appendChild(option);
+ }
+
+ //création d'une function de distribution (avec variable de personnalisation et nombre produit)
+
+ const quantityItem = document.getElementById("quantity");
+ const colorSelect = document.getElementById("colors");
+ function addToCart() {
+   const addToCartBtn = document.querySelector("#addToCart");
+
+   // Ecouter le panier avec 2 conditions couleur et quantité entre 1 et 100
+   addToCartBtn.addEventListener("click", (event) => {
+     if (
+       quantityItem.value > 0 &&
+       quantityItem.value <= 100 &&
+       quantityItem.value != 0
+     ) {
+       let personnalisation = colorSelect.value;
+       let kanapQuantity = quantityItem.value;
+ //Récupération des options du produit à ajouter au panier
+ let optionsProduit = {
+   idProduit:produitData._id,
+   couleurProduit: personnalisation,
+   quantiteProduit: Number(kanapQuantity),
+   nomProduit:produitData.name,
+   prixProduit: produitData.price,
+   descriptionProduit:produitData.description,
+   imgProduit: produitData.imageUrl,
+   altImgProduit: produitData.altTxt
+};
+
+    
+   //Initialisation du local storage
+   let produitLocalStorage = JSON.parse(localStorage.getItem("produit"));
+
+   //fenêtre  window confirme
+   const popupConfirmation =() =>{
+       if(window.confirm(`Votre commande de ${kanapQuantity } ${produitData.name} ${personnalisation} est ajoutée au panier
+Pour consulter votre panier, cliquez sur OK`)){
+           window.location.href ="./cart.html";
+       }
+   } 
+
+ 
+   popupConfirmation() 
+
+     
+     
+     
+     
+     }
+   });
+
+
+
+
+  // addEventListener();
+ }
+
+ addToCart();
 };
 produitDisplay();
