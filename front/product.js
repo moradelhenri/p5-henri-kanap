@@ -112,31 +112,55 @@ consulter le panier Ok ou revenir a l'accueil ANNULER`)
             window.location.href = "index.html";
           }
         };
-         //fonction ajouter un produit dans le localStorage
-         const ajoutProduitDansLocalStorage =() =>{
-          produitDansLocalStorage.push(optionsProduit);  
-          localStorage.setItem(
-            " produit",
-             JSON.stringify(optionsProduit));
-         }
+          //fonction ajouter un produit dans le localStorage
+        // const ajoutProduitDansLocalStorage = () => {
+        // produitDansLocalStorage.push(optionsProduit);
+        // localStorage.setItem("produit", JSON.stringify(optionsProduit));
 
         // s'il y a dejà des produits enregistré dans le localStorage
-       
-       if ( produitDansLocalStorage){
-        ajoutProduitDansLocalStorage() 
-          popupConfirmation();
-       }
-      
 
-        // s'il n y a pas de produit enregistré dans le localStorage
-        else {
+        if (produitDansLocalStorage) {
+          const totalityFind = produitDansLocalStorage.find(
+            (el) =>
+              el.idProduit === produitData._id && el.color === personnalisation
+          );
+          //Si le produit commandé est déjà dans le localStorage
+
+          if (totalityFind) {
+            let newQuantite =
+              parseInt(optionsProduit.quantiteProduit) +
+              parseInt(totalityFind.quantiteProduit);
+            totalityFind.quantiteProduit = newQuantite;
+            localStorage.setItem(
+              "produit",
+              JSON.stringify(produitDansLocalStorage)
+            );
+            console.table(produitDansLocalStorage);
+            popupConfirmation();
+
+            //Si le produit commandé est pas dans le localStorage
+          } else {
+            produitDansLocalStorage.push(optionsProduit);
+            localStorage.setItem(
+              "produit",
+              JSON.stringify(produitDansLocalStorage)
+            );
+
+            popupConfirmation();
+          }
+
+          // s'il n y a pas de produit enregistré dans le localStorage
+        } else {
           produitDansLocalStorage = [];
-          ajoutProduitDansLocalStorage(); 
-          
-        }
+          produitDansLocalStorage.push(optionsProduit);
+          localStorage.setItem(
+            "produit",
+            JSON.stringify(produitDansLocalStorage)
+          );
+          console.table(produitDansLocalStorage);
           popupConfirmation();
+        }
       }
-    
     });
   }
 
