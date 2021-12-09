@@ -2,11 +2,7 @@
  Sur cette page, l’utilisateur va pouvoir modifier la quantité d’un produit de son panier ; à ce
  moment, le total du panier devra bien se mettre à jour.
  L’utilisateur aura aussi la possibilité de supprimer un produit de son panier, le produit devra
- donc disparaître de la page.
- Les inputs des utilisateurs doivent être analysés et validés pour vérifier le format et le type
- de données avant l’envoi à l’API. Il ne serait par exemple pas recevable d’accepter un
- prénom contenant des chiffres, ou une adresse e-mail ne contenant pas de symbole “@”. En
- cas de problème de saisie, un message d’erreur devra être affiché en dessous du cham*/
+ donc disparaître de la page.*/
 
 //verrif local storage
 
@@ -154,66 +150,105 @@ function changeQuantities() {
       finalChoice.quantiteProduit = valueOfChoice;
       produitDansLocalStorage[h].quantiteProduit = finalChoice.quantiteProduit;
       localStorage.setItem("produit", JSON.stringify(produitDansLocalStorage));
-   // recharge la page 
+      // recharge la page
       location.reload();
     });
   }
 }
 changeQuantities();
 
-
 // supprimer un produit
 function cartProductRemoval() {
- let productRemoval = document.querySelectorAll(".deleteItem")
+  let productRemoval = document.querySelectorAll(".deleteItem");
 
-for (let d = 0; d < productRemoval.length; d ++){ 
-productRemoval [d].addEventListener ("click", (event) => {
+  for (let d = 0; d < productRemoval.length; d++) {
+    productRemoval[d].addEventListener("click", (event) => {
+      event.preventDefault();
 
- event.preventDefault ();
-
-   // selection des elements a suprimer en fonction de  son id et couleur
-
-let idRemoval = produitDansLocalStorage [d].idProduit
-let colorRemoval =produitDansLocalStorage[d].color;
-produitDansLocalStorage = produitDansLocalStorage.filter (el => el.idProduit !==idRemoval ||
-  el.color !==colorRemoval);
-  localStorage.setItem( "produit", JSON.stringify(produitDansLocalStorage));
-  // alerte produit supprimé
-  alert (" Ce produit à bien été supprimé")
-  location.reload()
-
-})
-
-
-
-}
+      // selection des elements a suprimer en fonction de  son id et couleur
+      let idRemoval = produitDansLocalStorage[d].idProduit;
+      let colorRemoval = produitDansLocalStorage[d].color;
+      produitDansLocalStorage = produitDansLocalStorage.filter(
+        (el) => el.idProduit !== idRemoval || el.color !== colorRemoval
+      );
+      localStorage.setItem("produit", JSON.stringify(produitDansLocalStorage));
+      // alerte produit supprimé
+      alert(" Ce produit à bien été supprimé");
+      location.reload();
+    });
+  }
 }
 
-cartProductRemoval ()
+cartProductRemoval();
 
-// integration formulaire avec regex
+/*Les inputs des utilisateurs doivent être analysés et validés pour vérifier le format et le type
+de données avant l’envoi à l’API. Il ne serait par exemple pas recevable d’accepter un
+prénom contenant des chiffres, ou une adresse e-mail ne contenant pas de symbole “@”. En
+cas de problème de saisie, un message d’erreur devra être affiché en dessous du cham*/
 
+// prenom,nom,adresse, ville, email; recherche de toute les inputs type text et type email
 
+const inputs = document.querySelectorAll(
+  'input[type ="text"], input[type ="email"]'
+);
 
+const firstNameChecker = (value) => {
+  console.log(value);
+  const cartOrderForm = document.querySelector(".cart__order__form__question ");
+  const firstNameError = document.querySelector(
+    ".cart__order__form__question p"
+  );
+  console.log(firstNameError);
 
+  if (value.length > 0 && (value.length < 3 || value.length > 20)) {
+    cartOrderForm.classList.add(".cart__order");
+    firstNameError.textContent = "Le prenom doit faire entre 3 et 20 caractere";
+  } else if (!value.match(/^[a-z ,.'-]+$/i)) {
+    cartOrderForm.classList.add(".cart__order");
+    firstNameError.textContent =
+      "Le prenom  ne doit pas contenir des caractère spéciaux ";
+  } else {
+    cartOrderForm.classList.remove(".cart__order");
+    firstNameError.textContent = "";
+  }
+};
 
-/* <!--  <article class="cart__item" data-id="{product-ID}">
-                <div class="cart__item__img">
-                  <img src="../images/product01.jpg" alt="Photographie d'un canapé">
-                </div>
-                <div class="cart__item__content">
-                  <div class="cart__item__content__titlePrice">
-                    <h2>Nom du produit</h2>
-                    <p>42,00 €</p>
-                  </div>
-                  <div class="cart__item__content__settings">
-                    <div class="cart__item__content__settings__quantity">
-                      <p>Qté : </p>
-                      <input type="number" class="itemQuantity" name="itemQuantity" min="1" max="100" value="42">
-                    </div>
-                    <div class="cart__item__content__settings__delete">
-                      <p class="deleteItem">Supprimer</p>
-                    </div>
-                  </div>
-                </div>
-              </article> -->*/
+const lastNameChecker = (value) => {
+  console.log(value);
+};
+
+const addressChecker = (value) => {
+  console.log(value);
+};
+
+const cityChecker = (value) => {
+  console.log(value);
+};
+
+const emailChecker = (value) => {
+  console.log(value);
+};
+
+inputs.forEach((input) => {
+  input.addEventListener("input", (e) => {
+    switch (e.target.id) {
+      case "firstName":
+        firstNameChecker(e.target.value);
+        break;
+      case "lastName":
+        lastNameChecker(e.target.value);
+        break;
+      case "address":
+        addressChecker(e.target.value);
+        break;
+      case "city":
+        cityChecker(e.target.value);
+        break;
+      case "email":
+        emailChecker(e.target.value);
+        break;
+      default:
+        null;
+    }
+  });
+});

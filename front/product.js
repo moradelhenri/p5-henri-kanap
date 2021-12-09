@@ -85,7 +85,7 @@ const produitDisplay = async () => {
         //Récupération des options du produit à ajouter au panier
         let optionsProduit = {
           idProduit: produitData._id,
-          colors: personnalisation,
+          color: personnalisation,
           quantiteProduit: Number(kanapQuantity),
           name: produitData.name,
           prixProduit: produitData.price,
