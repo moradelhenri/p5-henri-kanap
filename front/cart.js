@@ -189,7 +189,7 @@ cas de problème de saisie, un message d’erreur devra être affiché en dessou
 
 // prenom,nom,adresse, ville, email; recherche de toute les inputs type text et type email
 
-const form = document.getElementById("contact");
+const form = document.querySelector(".cart__order__form");
 
 const inputs = document.querySelectorAll(
   'input[type ="text"], input[type ="email"], input [type ="submit"]'
@@ -291,7 +291,7 @@ const emailChecker = (value) => {
   );
   const emailError = document.getElementById("emailErrorMsg");
 
-  if (!value.match(/^[\w_-]+@[\w-]+\.[a-z]{2,4}$/i)) {
+  if (!value.match('^[a-zA-Z0-9.-_]+[@]{1}[a-zA-Z0-9.-_]+[.]{1}[a-z]{2,10}$', 'g')){
     emailError.textContent = "Le mail n'est pas valide";
     email = null;
   } else {
@@ -328,14 +328,14 @@ form.addEventListener("submit", (e) => {
   e.preventDefault();
 
   if (firstName && lastName && address && city && email) {
-    const dataForm = {
+    const data = {
       firstName,
       lastName,
       address,
       city,
       email,
     };
-console.log(dataForm);
+console.log(data);
 
     inputs.forEach((input) => (input.value = ""));
 
@@ -345,63 +345,62 @@ console.log(dataForm);
     city = null;
     email = null;
 
-    alert("Inscription validée !");
+    alert("formulaire validée !");
   } else {
     alert("veuillez remplir correctement les champs");
   }
 });
 
-function postForm() {
+function postForm () {
   const btn_commander = document.getElementById("order");
   // ecoute du panier
   btn_commander.addEventListener("click", (event) => {
-    //recuperation des données clients
- 
+   //Récupération des coordonnées du formulaire client
+   firstName = document.getElementById('firstName');
+   lastName = document.getElementById('lastName');
+   address = document.getElementById('address');
+   city = document.getElementById('city');
+  email = document.getElementById('email');
 
-    firstName = document.getElementById("firstName").value;
-   lastName = document.getElementById("lastName").value;
-   address = document.getElementById("address").value;
-   city = document.getElementById("city").value;
-    email = document.getElementById("email").value;
-    // construction  d'un tableau depuis le localStorage
-    let idProducts = [];
-    for (let i = 0; i <produitDansLocalStorage.length;i++) {
+  //Construction d'un array depuis le localStorage
+  let idProducts = [];
+  for (let i = 0; i<produitDansLocalStorage.length;i++) {
       idProducts.push(produitDansLocalStorage[i].idProduit);
-    }
-    console.log(idProducts);
+  }
+  console.log(idProducts);
 
-    const order = {
-      
-      contact: {
-       firstName:firstName.value,
-
-        lastName:lastName.value,
-         address:address.value,
-         city:city.value,
-         email:email.value
+  const order = {
+      contact : {
+          firstName: firstName.value,
+          lastName: lastName.value,
+          address: address.value,
+          city: city.value,
+          email: email.value,
       },
-
       products: idProducts,
-    };
-    const options = {
-      method: "POST",
+  } 
+
+  const options = {
+      method: 'POST',
       body: JSON.stringify(order),
-      Headers: {
-        'Accept': "application/json",
-        "Content-Type": "application/json",
+      headers: {
+          'Accept': 'application/json', 
+          "Content-Type": "application/json" 
       },
-    };
-    fetch("http://localhost:3000/api/products/order", options)
-      .then((response) => response.json())
-      .then((data) => {
-        console.log(data);
-        localStorage.clear();
-        localStorage.setItem("orderId", data.orderId);
-        document.location.href = "confirmation.html";
-      })
-      .catch((err) => {
-        alert("probleme avec fetch : " + err.message);
-      });
+  };
+
+  fetch("http://localhost:3000/api/products/order", options)
+  .then((response) => response.json())
+  .then((data) => {
+      console.log(data);
+      localStorage.clear();
+      localStorage.setItem("orderId", data.orderId);
+
+      document.location.href = "confirmation.html";
+  })
+  .catch((err) => {
+      alert ("Problème avec fetch : " + err.message);
   });
+  })
 }
 postForm();
