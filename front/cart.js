@@ -197,13 +197,13 @@ const inputs = document.querySelectorAll(
 let firstName, lastName, address, city, email;
 
 const firstNameChecker = (value) => {
-  console.log(firstNameChecker);
   const cartOrderForm = document.querySelector(".cart__order__form__question ");
   const firstNameError = document.getElementById("firstNameErrorMsg");
 
   if (value.length > 0 && (value.length < 3 || value.length > 20)) {
     cartOrderForm.classList.add("cart__order");
-    firstNameError.textContent = "Le prenom doit faire entre 3 et 20 caracteres";
+    firstNameError.textContent =
+      "Le prenom doit faire entre 3 et 20 caracteres";
     firstName = null;
   } else if (!value.match(/^[é è¨a-z ,.'-]+$/i)) {
     cartOrderForm.classList.add(".cart__order");
@@ -275,7 +275,7 @@ const cityChecker = (value) => {
     cartOrderFormCity.classList.add("cart__order");
 
     cityError.textContent =
-      "La ville ne doit pas contenir des caractère spéciaux ";
+      "La ville ne doit pas contenir des caractères spéciaux ";
     city = null;
   } else {
     cartOrderFormCity.classList.remove("cart__order");
@@ -285,13 +285,14 @@ const cityChecker = (value) => {
 };
 
 const emailChecker = (value) => {
-  console.log(emailChecker);
   const cartOrderEmail = document.querySelector(
     ".cart__order__form__question "
   );
   const emailError = document.getElementById("emailErrorMsg");
 
-  if (!value.match('^[a-zA-Z0-9.-_]+[@]{1}[a-zA-Z0-9.-_]+[.]{1}[a-z]{2,10}$', 'g')){
+  if (
+    !value.match("^[a-zA-Z0-9.-_]+[@]{1}[a-zA-Z0-9.-_]+[.]{1}[a-z]{2,10}$", "g")
+  ) {
     emailError.textContent = "Le mail n'est pas valide";
     email = null;
   } else {
@@ -335,7 +336,7 @@ form.addEventListener("submit", (e) => {
       city,
       email,
     };
-console.log(data);
+    console.log(data);
 
     inputs.forEach((input) => (input.value = ""));
 
@@ -351,56 +352,56 @@ console.log(data);
   }
 });
 
-function postForm () {
+function postForm() {
   const btn_commander = document.getElementById("order");
   // ecoute du panier
   btn_commander.addEventListener("click", (event) => {
-   //Récupération des coordonnées du formulaire client
-   firstName = document.getElementById('firstName');
-   lastName = document.getElementById('lastName');
-   address = document.getElementById('address');
-   city = document.getElementById('city');
-  email = document.getElementById('email');
+    //Récupération des coordonnées du formulaire client
+    firstName = document.getElementById("firstName");
+    lastName = document.getElementById("lastName");
+    address = document.getElementById("address");
+    city = document.getElementById("city");
+    email = document.getElementById("email");
 
-  //Construction d'un array depuis le localStorage
-  let idProducts = [];
-  for (let i = 0; i<produitDansLocalStorage.length;i++) {
+    //Construction d'un array depuis le localStorage
+    let idProducts = [];
+    for (let i = 0; i < produitDansLocalStorage.length; i++) {
       idProducts.push(produitDansLocalStorage[i].idProduit);
-  }
-  console.log(idProducts);
+    }
+    console.log(idProducts);
 
-  const order = {
-      contact : {
-          firstName: firstName.value,
-          lastName: lastName.value,
-          address: address.value,
-          city: city.value,
-          email: email.value,
+    const order = {
+      contact: {
+        firstName: firstName.value,
+        lastName: lastName.value,
+        address: address.value,
+        city: city.value,
+        email: email.value,
       },
       products: idProducts,
-  } 
+    };
 
-  const options = {
-      method: 'POST',
+    const options = {
+      method: "POST",
       body: JSON.stringify(order),
       headers: {
-          'Accept': 'application/json', 
-          "Content-Type": "application/json" 
+        Accept: "application/json",
+        "Content-Type": "application/json",
       },
-  };
+    };
 
-  fetch("http://localhost:3000/api/products/order", options)
-  .then((response) => response.json())
-  .then((data) => {
-      console.log(data);
-      localStorage.clear();
-      localStorage.setItem("orderId", data.orderId);
+    fetch("http://localhost:3000/api/products/order", options)
+      .then((response) => response.json())
+      .then((data) => {
+        console.log(data);
+        localStorage.clear();
+        localStorage.setItem("orderId", data.orderId);
 
-      document.location.href = "confirmation.html";
-  })
-  .catch((err) => {
-      alert ("Problème avec fetch : " + err.message);
+        document.location.href = "confirmation.html";
+      })
+      .catch((err) => {
+        alert("Problème avec fetch : " + err.message);
+      });
   });
-  })
 }
 postForm();
